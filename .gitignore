@@ -1,0 +1,9 @@
+#ignore virtualenv files
+bin
+include
+lib
+pip-selfcheck.json
+.Python
+
+#ignore contents of static folder
+static/*
