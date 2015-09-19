@@ -1,4 +1,9 @@
 <!doctype html>
 <title>Stego</title>
-<h1>{{ filename }}</h1>
-<img src="{{ path }}">
+<body>
+    {% for im in images %}
+        <h1>{{ im }}</h1>
+        <img src="{{ path }}{{ im }}">
+    {% endfor %}
+</body>
+

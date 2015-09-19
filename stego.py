@@ -1,7 +1,9 @@
 import os
-from flask import Flask, request, redirect, url_for, render_template
+from flask import Flask, g, request, redirect, url_for, render_template
+from flask import send_from_directory
 from werkzeug import secure_filename
 from PIL import Image
+import color_bands
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 UPLOAD_FOLDER = './static/'
@@ -20,21 +22,22 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            global images
+            images = [filename]
+            images = color_bands.gen_bands(os.path.join(app.config['UPLOAD_FOLDER']), filename, images)
+            g.images = images
+            return redirect(url_for('base_image'))
     return render_template('index.html')
 
-from flask import send_from_directory
-
-@app.route('/show/<filename>')
-def uploaded_file(filename):
-    path = 'http://127.0.0.1:5000/uploads/' + filename
-    return render_template('stego.html', path=path, filename=filename)
+@app.route('/show')
+def base_image():
+    global images
+    path = 'http://127.0.0.1:5000/uploads/'
+    return render_template('stego.html', path=path, images=images)
 
 @app.route('/uploads/<filename>')
 def send_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
     app.run(
