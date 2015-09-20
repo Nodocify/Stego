@@ -4,6 +4,7 @@ include
 lib
 pip-selfcheck.json
 .Python
+__pycache__
 
 #ignore contents of static folder
 static/*
