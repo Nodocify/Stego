@@ -1,5 +1,6 @@
 from PIL import Image, ImageOps
 import numpy as np
+from random import shuffle
 
 def gen_bands(path, filename, images=[]):
 
@@ -69,6 +70,26 @@ def gen_bands(path, filename, images=[]):
     fname = 'solarized_' + filename
     im2.save(path + fname)
     images.append(fname)
+
+    #randomized
+    for n in range(3):
+        im2 = Image.new(im.mode, im.size)
+        pix = im.load()
+        pix2 = im2.load()
+        lista = [i for i in range(256)]
+        listb = [i for i in lista]
+        shuffle(listb)
+        pixdict = dict(zip(lista, listb))
+        for y in range(im.size[1])
+            for x in range(im.size[0])
+                rgb = pix[x,y]
+                tmp = []
+                for i in rgb:
+                    tmp.append(pixdict[i])
+                pix2[x,y] = tuple.tmp
+        fname = 'random' + str(n + 1) + '_' + filename
+        im2.save(path + fname)
+        images.append(fname)
 
     return images
 
